@@ -1,0 +1,32 @@
+	<html>
+	<head>
+	<!-- 합쳐지고 최소화된 최신 CSS -->
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<!-- 부가적인 테마 -->
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+	<title>Home</title>
+	</head>
+	
+	<body>
+	{% if form.errors %}
+	<p>ID나 비밀번호가 일치하지 않습니다.</p>
+	{% endif %}
+		<form name="homeForm" method="post" action="{% url 'login' %}">
+			{% csrf_token %}
+				<div>
+					<label for="userId"></label> <input type="text" id="userId"
+						name="userId">
+				</div>
+				<div>
+					<label for="userPass"></label> <input type="password" id="userPass"
+						name="userPass">
+				</div>
+				<div>
+					<button type="submit">로그인</button>
+					<a href="{% url 'signup' %}" method="POST">회원가입</a>
+				</div>
+		</form>
+	</body>
+	</html>
