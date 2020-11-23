@@ -1,0 +1,77 @@
+<a href="{% url 'home' %}">home</a>
+{{user.username}}님 로그인중입니다.<br>
+<!--검색창-->
+<form name="workinfo" method="post" action="{% url 'worksearch' %}">
+	{% csrf_token %}
+<table class="worksearch" border="1">
+<tbody>
+<tr align="center">
+	<td name="searchYear" >검색년</td>
+	<td>검색월</td>
+	<td>사원명</td>
+
+</tr>
+
+<tr>
+	{% if usrs %}
+		{% for usrs in usrs.all%}
+	<td>{{usrs.USR_TIMEINF}}</td>
+	<td>{{usrs.USR_TIMEINF}}</td>
+	<td>{{usrs.USRNAME}}</td>
+		{% endfor %}
+	{% else %}
+	<td>
+		<input type="text" name="searchYear" size="20" style="width:100%; border:0;">
+
+	</td>
+	<td>
+		<input type="text" name="searchMonth" size="20"  style="width:100%; border:0;">
+	</td>
+	<td>
+		<input type="text" name="searchName" size="20" style="width:100%; border:0;">
+
+	</td>
+	<button type="submit">검색</button>
+	{% endif %}
+
+</tr>
+
+</tbody>
+</table>
+</form>
+<br>
+<!--근무표 입력-->
+<table class="workinfo" border="1" bordercolor="black"  align="Left">
+<tbody>
+<tr align="center" >
+	<td>일자</td>
+	<td>출근시간</td>
+	<td>퇴근시간</td>
+	<td>휴가</td>
+	<td>비고</td>
+</tr>
+<tr>
+
+	{% if usrs %}
+		{% for usrs in usrs.all%}
+	<td>{{usrs.USR_TIMEINF}}</td>
+	<td>{{usrs.USR_TIMEINF}}</td>
+	<td>{{usrs.USRNAME}}</td>
+		{% endfor %}
+	{% else %}
+	<td>
+		<input type="text" name="text" size="20" style="width:100%; border:0;">
+	</td>
+	<td>
+		<input type="text" name="text" size="20" style="width:100%; border:0;">
+	</td>
+	<td>
+		<input type="text" name="text" size="20" style="width:100%; border:0;">
+	</td>
+	<td>
+		<input type="text" name="text" size="20" style="width:100%; border:0;">
+	</td>
+	{% endif %}
+</tr>
+</tbody>
+</table>
