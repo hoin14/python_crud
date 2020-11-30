@@ -41,37 +41,34 @@
 </form>
 <br>
 <!--근무표 입력-->
-<table class="workinfo" border="1" bordercolor="black"  align="Left">
+<form name="workadd" method="post" action="{% url 'workadd' %}">
+		{% csrf_token %}
+<table class="workadd" border="1" bordercolor="black"  align="Left">
+<thead align="center" >
+	<tr>
+		<th>일자</th>
+		<th>출근시간</th>
+		<th>퇴근시간</th>
+	</tr>
+</thead>
 <tbody>
-<tr align="center" >
-	<td>일자</td>
-	<td>출근시간</td>
-	<td>퇴근시간</td>
-	<td>휴가</td>
-	<td>비고</td>
-</tr>
-<tr>
-
-	{% if usrs %}
-		{% for usrs in usrs.all%}
-	<td>{{usrs.USR_TIMEINF}}</td>
-	<td>{{usrs.USR_TIMEINF}}</td>
-	<td>{{usrs.USRNAME}}</td>
+	{% if workList %}
+		{% for worktime in workList%}
+			{{worktime}}<br>
 		{% endfor %}
 	{% else %}
-	<td>
-		<input type="text" name="text" size="20" style="width:100%; border:0;">
-	</td>
-	<td>
-		<input type="text" name="text" size="20" style="width:100%; border:0;">
-	</td>
-	<td>
-		<input type="text" name="text" size="20" style="width:100%; border:0;">
-	</td>
-	<td>
-		<input type="text" name="text" size="20" style="width:100%; border:0;">
-	</td>
+		{% if Date %}
+			{% for Date in Date%}
+			<tr>
+				<td name="date">{{Date}}</td>
+				<td><input type="text" name="sTime" size="20" style="width:100%; border:0;"></td>
+				<td><input type="text" name="dTime" size="20" style="width:100%; border:0;"></td>
+			{% endfor %}
+			</tr>
+		{% endif %}
+		<input type="hidden" name="user" value="{{user.username}}">
 	{% endif %}
-</tr>
+	<button type="submit">작성</button>
 </tbody>
 </table>
+</form>

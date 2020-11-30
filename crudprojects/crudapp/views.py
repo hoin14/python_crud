@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
 import json
+import csv
+import time
+import datetime
+import pandas as pd
 from .models import USR_TIMETBL_INF
 
 
@@ -57,26 +61,45 @@ def postlike(request):
         return render(request, 'login.html', {'id' : id})
 
 def workinfo(requset):
-    return render(requset, 'workinfo.html')
+
+    year = time.strftime('%Y', time.localtime(time.time()))
+    month = time.strftime('%m', time.localtime(time.time()))
+    day = time.strftime('%d', time.localtime(time.time()))
+    Date = year + '-' + month + '-'
+    DateList = []
+    for i in range(1, 31):
+        DateList.append(Date+ str(i))
+    return render(requset, 'workinfo.html', {'Date' : DateList})
+
+def workadd(requset):
+    if requset.method == "POST":
+        date = requset.POST.get('date', '')
+        sTime = requset.POST.get('sTime', '')
+        dTime = requset.POST.get('dTime', '')
+        user = requset.POST.get('user' '')
+
+        print(date, sTime, dTime)
+        # #csv파일 쓰기
+        # f = open('workinfo/' + date + '_' + user + '.csv', 'w', encoding='utf-8', newline='')
+        # wr = csv.writer(f)
+        # wr.writerow([date, sTime, dTime])
+        # f.close()
+        # print(f)
+    return render(requset, 'home.html')
 
 def worksearch(requset):
     if requset.method == "POST":
-        search_year= requset.POST.get('searchYear', '')
-        search_month = requset.POST.get('searchMonth', '')
-        search_name = requset.POST.get('searchName', '')
+        sYear = requset.POST.get('searchYear', '')
+        sMonth = requset.POST.get('searchMonth', '')
+        sName = requset.POST.get('searchName', '')
 
-        all = USR_TIMETBL_INF.objects.all()
-        result=[]
+        # csv파일 읽기
+        f = open('workinfo/' + sYear + sMonth + '_' + sName + '.csv', 'r', encoding='utf-8')
+        rdr = csv.reader(f)
+        workList = []
+        for line in rdr:
+            workList.append(line)
+        f.close()
+        print(workList)
 
-        for usrs1 in all.filter(USRID__contains='hoin'):
-
-            # str_split=str.split('|')
-
-            # year = str_split.split[0]
-            # starttime = str_split.split[1]
-            # outtime = str_split.split[2]
-            # print(year, starttime, outtime)
-
-        usrs = USR_TIMETBL_INF.objects.all()
-
-    return render(requset, 'workinfo.html', {'usrs': usrs})
+    return render(requset, 'workinfo.html', {'workList': workList})
