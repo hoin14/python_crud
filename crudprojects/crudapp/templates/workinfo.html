@@ -1,6 +1,7 @@
 <a href="{% url 'home' %}">home</a>
 {{user.username}}님 로그인중입니다.<br>
-<!--검색창-->
+
+<!--검색창 테이블-->
 <form name="workinfo" method="post" action="{% url 'worksearch' %}">
 	{% csrf_token %}
 <table class="worksearch" border="1">
@@ -9,39 +10,46 @@
 	<td name="searchYear" >검색년</td>
 	<td>검색월</td>
 	<td>사원명</td>
-
 </tr>
-
 <tr>
-	{% if usrs %}
-		{% for usrs in usrs.all%}
-	<td>{{usrs.USR_TIMEINF}}</td>
-	<td>{{usrs.USR_TIMEINF}}</td>
-	<td>{{usrs.USRNAME}}</td>
-		{% endfor %}
-	{% else %}
 	<td>
-		<input type="text" name="searchYear" size="20" style="width:100%; border:0;">
-
+		<input type="text" id="searchYear" name="searchYear" size="20" style="width:100%; border:0;">
 	</td>
 	<td>
 		<input type="text" name="searchMonth" size="20"  style="width:100%; border:0;">
 	</td>
 	<td>
 		<input type="text" name="searchName" size="20" style="width:100%; border:0;">
-
 	</td>
-	<button type="submit">검색</button>
-	{% endif %}
-
+	<input type="hidden" name="user" value="{{user.username}}">
+	<button type="submit" id="searchBtn">검색</button>
 </tr>
-
 </tbody>
 </table>
 </form>
+<div id="result"></div>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+	$('form').submit(function(event){
+	event.preventDefault();
+	var form = $(this);
+	$.ajax({
+		url: "{% url 'worksearch' %}",
+		type: "POST",
+		dataType: "text",
+		data: form.serialize(),
+		success: function() {
+				$('#result').text('ok' + data);
+			},
+	})
+	})
+</script>
+
+
 <br>
-<!--근무표 입력-->
-<form name="workadd" method="post" action="{% url 'workadd' %}">
+
+<!--근무표입력 테이블-->
+<!--<form name="workadd" method="post" action="{% url 'workadd' %}">-->
 		{% csrf_token %}
 <table class="workadd" border="1" bordercolor="black"  align="Left">
 <thead align="center" >
@@ -61,14 +69,52 @@
 			{% for Date in Date%}
 			<tr>
 				<td name="date">{{Date}}</td>
-				<td><input type="text" name="sTime" size="20" style="width:100%; border:0;"></td>
-				<td><input type="text" name="dTime" size="20" style="width:100%; border:0;"></td>
+				<td><input type="text" name="startTime" id="sTime"  size="20" style="width:100%; border:0;"></td>
+				<td><input type="text" name="endTime" id="eTime" size="20" style="width:100%; border:0;"></td>
 			{% endfor %}
 			</tr>
 		{% endif %}
 		<input type="hidden" name="user" value="{{user.username}}">
 	{% endif %}
-	<button type="submit">작성</button>
+	<button type="submit" id="workinfoAdd">작성</button>
 </tbody>
 </table>
-</form>
+<!--</form>-->
+<div id="result2"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquey/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$("#workinfoAdd").click(function(){
+		var dataArr = new Array();
+		for(var i=1; i<=2; i++){
+			var dataObj = new Object();
+			dataObj.id = $("#sTime")[i].val();
+			dataObj.pw = $("#eTime")[i].val();
+			dataArr.push(dataObj);
+		}
+		var jsonData = JSON.stringify(dataArr);
+		$("#result2").html(jsonData);
+	});
+
+</script>
+
+<input type="text" id="id1">, <input type="text" id="pw1"><br>
+<input type="text" id="id2">, <input type="text" id="pw2">
+<button id="changeBtn">JSON</button>
+<strong>result</strong>
+<div id="result1"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquey/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$("#changeBtn").click(function(){
+		console.log("error")
+		var dataArr = new Array();
+		for(var i=1; i<=2; i++){
+			var dataObj = new Object();
+			dataObj.id = $("#id"+i).val();
+			dataObj.pw = $("#pw"+i).val();
+			dataArr.push(dataObj);
+		}
+		var jsonData = JSON.stringify(dataArr);
+		$("#result1").html(jsonData);
+	});
+
+</script>

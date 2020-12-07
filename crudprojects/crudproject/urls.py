@@ -27,4 +27,5 @@ urlpatterns = [
     path('workinfo/', views.workinfo, name='workinfo'),
     path('worksearch/', views.worksearch, name='worksearch'),
     path('workadd/', views.workadd, name='workadd'),
+    path('favorites/', views.favorites, name='favorites'),
 ]
