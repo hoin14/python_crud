@@ -28,30 +28,13 @@
 </table>
 </form>
 <div id="result"></div>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script type="text/javascript">
-	$('form').submit(function(event){
-	event.preventDefault();
-	var form = $(this);
-	$.ajax({
-		url: "{% url 'worksearch' %}",
-		type: "POST",
-		dataType: "text",
-		data: form.serialize(),
-		success: function() {
-				$('#result').text('ok' + data);
-			},
-	})
-	})
-</script>
-
 
 <br>
 
 <!--근무표입력 테이블-->
-<!--<form name="workadd" method="post" action="{% url 'workadd' %}">-->
+<form name="workadd" method="post" action="{% url 'workadd' %}">
 		{% csrf_token %}
-<table class="workadd" border="1" bordercolor="black"  align="Left">
+<table class="workadd" border="1" bordercolor="black" id="myTable" align="Left">
 <thead align="center" >
 	<tr>
 		<th>일자</th>
@@ -62,59 +45,43 @@
 <tbody>
 	{% if workList %}
 		{% for worktime in workList%}
-			{{worktime}}<br>
+		<tr>
+			<td>{{worktime.0}}</td>
+			<td>{{worktime.1}}</td>
+			<td>{{worktime.2}}</td>
+		</tr>
 		{% endfor %}
 	{% else %}
 		{% if Date %}
 			{% for Date in Date%}
 			<tr>
-				<td name="date">{{Date}}</td>
+				<td><input type="text" name="date" id="date" value="{{Date}}" readonly></td>
 				<td><input type="text" name="startTime" id="sTime"  size="20" style="width:100%; border:0;"></td>
-				<td><input type="text" name="endTime" id="eTime" size="20" style="width:100%; border:0;"></td>
+				<td><input type="text" name="endTime" id="eTime"  size="20" style="width:100%; border:0;"></td>
 			{% endfor %}
 			</tr>
 		{% endif %}
-		<input type="hidden" name="user" value="{{user.username}}">
 	{% endif %}
-	<button type="submit" id="workinfoAdd">작성</button>
+	<button type="submit" id="workInsert">작성</button>
 </tbody>
 </table>
 <!--</form>-->
 <div id="result2"></div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquey/3.2.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
-	$("#workinfoAdd").click(function(){
+	$("#workInsert").click(function(){
+		var tab = document.getElementById("myTable");
+		var rows = tab.rows;
+		var ips = tab.getElementsByTagName("input");
 		var dataArr = new Array();
-		for(var i=1; i<=2; i++){
-			var dataObj = new Object();
-			dataObj.id = $("#sTime")[i].val();
-			dataObj.pw = $("#eTime")[i].val();
+    	for (var k= 0; k<ips.length; k++){
+    		var dataObj = new Object();
+    		var ipText = ips[k];
+			dataObj = ipText.id + ":" + ipText.value
 			dataArr.push(dataObj);
 		}
 		var jsonData = JSON.stringify(dataArr);
 		$("#result2").html(jsonData);
 	});
-
 </script>
 
-<input type="text" id="id1">, <input type="text" id="pw1"><br>
-<input type="text" id="id2">, <input type="text" id="pw2">
-<button id="changeBtn">JSON</button>
-<strong>result</strong>
-<div id="result1"></div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquey/3.2.1/jquery.min.js"></script>
-<script type="text/javascript">
-	$("#changeBtn").click(function(){
-		console.log("error")
-		var dataArr = new Array();
-		for(var i=1; i<=2; i++){
-			var dataObj = new Object();
-			dataObj.id = $("#id"+i).val();
-			dataObj.pw = $("#pw"+i).val();
-			dataArr.push(dataObj);
-		}
-		var jsonData = JSON.stringify(dataArr);
-		$("#result1").html(jsonData);
-	});
-
-</script>
