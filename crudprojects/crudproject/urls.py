@@ -28,4 +28,5 @@ urlpatterns = [
     path('worksearch/', views.worksearch, name='worksearch'),
     path('workadd/', views.workadd, name='workadd'),
     path('favorites/', views.favorites, name='favorites'),
+    path('sign/', views.AjaxRespon, name='index'),
 ]

@@ -8,6 +8,10 @@ import datetime
 import pandas as pd
 from .models import USR_TIMETBL_INF
 from django.http import HttpResponse
+import os
+from django.shortcuts import render
+from django.shortcuts import HttpResponse
+import sys
 
 def home(requset):
     return render(requset, 'home.html')
@@ -72,25 +76,35 @@ def workinfo(requset):
     return render(requset, 'workinfo.html', {'Date' : DateList})
 
 def workadd(requset):
-    if requset.method == "POST":
-        sTime = requset.POST.get('sTime', '')
-        eTime = requset.POST.get('eTime', '')
-        user = requset.POST.get('user', '')
+    # if requset.method == "POST":
+        # sTime = requset.POST.get('sTime', '')
+        # eTime = requset.POST.get('eTime', '')
+        # user = requset.POST.get('user', '')
         # sTimeArray = [];
         # sTimeArray = requset.getParameterValues("sTime");
-        param = json.loads(request.json)
-        sTime = param.get('sTime')
+        # param = json.loads(request.json)
+        # sTime = param.get('sTime')
         # print(sTimeArray)
 
-        print(sTime)
+        # print(sTime)
 
         # #csv파일 쓰기
         # f = open('workinfo/' + date + '_' + user + '.csv', 'w', encoding='utf-8', newline='')
         # wr = csv.writer(f)
         # wr.writerow([date, sTime, dTime])
+
+    # data = sys.stdin.read()
+    # params = json.loads(data)
+    # text = params['sTime']
+    # json = requset.POST.get('jsonData', '')
+    # result = {'sTime' : text}
+    print("ajax Okay")
+    # print(json.JSONEncoder().encode(result))
+
+
         # f.close()
         # print(f)
-    return render(requset, 'home.html')
+    return render(requset, 'workinfo.html')
 
 def worksearch(requset):
     if requset.method == "POST":
@@ -117,3 +131,11 @@ def favorites(request):
     else:
         message = "NOT AJAX"
     return HttpResponse(message)
+
+def AjaxRespon(request):
+    #return HttpResponse('<div id = "Context">테스트</div>')
+    # key = open(os.path.join(os.path.dirname(__file__), 'data'), mode='r', encoding='utf-8').read()
+    # context = {'key':'<div id = "Context">{}</div>'.format(key)}
+    context = {'key': '<div id = "Context">{}</div>'}
+    print("ajaxRespons")
+    return render(request, 'ajax.html', context)

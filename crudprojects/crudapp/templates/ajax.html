@@ -1,0 +1,28 @@
+<html>
+<meta charset="UTF-8">
+<body>
+  <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+  <div id="Context">This is original</div>
+  <script type="text/javascript">
+    function ajaxTest(){
+      $.ajax({
+        type : "GET",
+        url : "sign/",
+        dataType : "text",
+        error : function() {
+          alert('통신실패!!');
+        },
+        success : function(data) {
+          $('#Context').html(data);
+        }
+
+      });
+    }
+    playAlert = setInterval(function() {
+        ajaxTest();
+    });
+
+  </script>
+</body>
+
+</html>

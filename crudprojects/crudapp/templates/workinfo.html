@@ -32,7 +32,7 @@
 <br>
 
 <!--근무표입력 테이블-->
-<form name="workadd" method="post" action="{% url 'workadd' %}">
+<!--<form name="workadd" method="post" action="{% url 'workadd' %}">-->
 		{% csrf_token %}
 <table class="workadd" border="1" bordercolor="black" id="myTable" align="Left">
 <thead align="center" >
@@ -67,10 +67,12 @@
 </table>
 <!--</form>-->
 <div id="result2"></div>
+
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
 	$("#workInsert").click(function(){
-		var tab = document.getElementById("myTable");
+
+ 		var tab = document.getElementById("myTable");
 		var rows = tab.rows;
 		var ips = tab.getElementsByTagName("input");
 		var dataArr = new Array();
@@ -82,6 +84,22 @@
 		}
 		var jsonData = JSON.stringify(dataArr);
 		$("#result2").html(jsonData);
+
+     	 $.ajax({
+     	type: "POST",
+        url : "{% url 'workadd' %}",
+    	contentType: "application/json",
+    	dataType: "json",
+    	data: jsonData,
+        error : function() {
+          alert('통신실패!!');
+        },
+        success : function(data) {
+			alert('통신성공!!');
+        }
+
+      });
+
+
 	});
 </script>
-
