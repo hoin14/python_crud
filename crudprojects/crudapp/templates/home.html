@@ -12,8 +12,8 @@
 <body>
 <a href="{% url 'home' %}">home</a>
 {% if user.is_active %}
-<li><a href="{% url 'workinfo' %}">근무표 작성</a></li>
-<li><a href="{% url 'logout' %}">근무표 출력</a></li>
+<li><a href="{% url 'addmenu' %}">근무표 작성</a></li>
+<li><a href="{% url 'workinfo' %}">근무표 출력</a></li>
 <li><a href="{% url 'logout' %}">환경설정</a></li>
 <li><a href="{% url 'logout' %}">로그아웃</a></li>
 {{user.username}}님 로그인중입니다.<br>

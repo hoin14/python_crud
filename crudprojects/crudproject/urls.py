@@ -23,10 +23,9 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
-    path('postlike/', views.postlike, name='postlike'),
     path('workinfo/', views.workinfo, name='workinfo'),
     path('worksearch/', views.worksearch, name='worksearch'),
     path('workadd/', views.workadd, name='workadd'),
-    path('favorites/', views.favorites, name='favorites'),
-    path('sign/', views.AjaxRespon, name='index'),
+    path('addmenu/', views.addmenu, name='addmenu'),
+
 ]

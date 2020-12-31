@@ -1,36 +1,8 @@
 <a href="{% url 'home' %}">home</a>
 {{user.username}}님 로그인중입니다.<br>
 
-<!--검색창 테이블-->
-<form name="workinfo" method="post" action="{% url 'worksearch' %}">
-	{% csrf_token %}
-<table class="worksearch" border="1">
-<tbody>
-<tr align="center">
-	<td name="searchYear" >검색년</td>
-	<td>검색월</td>
-	<td>사원명</td>
-</tr>
-<tr>
-	<td>
-		<input type="text" id="searchYear" name="searchYear" size="20" style="width:100%; border:0;">
-	</td>
-	<td>
-		<input type="text" name="searchMonth" size="20"  style="width:100%; border:0;">
-	</td>
-	<td>
-		<input type="text" name="searchName" size="20" style="width:100%; border:0;">
-	</td>
-	<input type="hidden" name="user" value="{{user.username}}">
-	<button type="submit" id="searchBtn">검색</button>
-</tr>
-</tbody>
-</table>
-</form>
 <div id="result"></div>
-
 <br>
-
 <!--근무표입력 테이블-->
 <!--<form name="workadd" method="post" action="{% url 'workadd' %}">-->
 		{% csrf_token %}
@@ -62,5 +34,41 @@
 			</tr>
 		{% endif %}
 	{% endif %}
+	<button type="submit" id="workInsert">작성</button>
 </tbody>
 </table>
+<!--</form>-->
+<div id="result2"></div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+	$("#workInsert").click(function(){
+
+ 		var tab = document.getElementById("myTable");
+		var rows = tab.rows;
+		var ips = tab.getElementsByTagName("input");
+		var dataArr = new Array();
+    	for (var k= 0; k<ips.length; k++){
+    		var dataObj = new Object();
+    		var ipText = ips[k];
+			dataObj = ipText.id + ":" + ipText.value
+			dataArr.push(dataObj);
+		}
+		var jsonData = JSON.stringify(dataArr);
+		$("#result2").html(jsonData);
+
+     	 $.ajax({
+     	type: 'POST',
+        url : '{% url 'workadd' %}',
+    	contentType: 'application/json',
+    	dataType: 'json',
+    	data: jsonData,
+        success : function(data) {
+			alert('통신성공!!');
+        }
+
+      });
+
+
+	});
+</script>

@@ -1,116 +1,100 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
-import json
-import csv
-import time
-import datetime
+import json, csv, time, datetime, os, sys
 import pandas as pd
 from .models import USR_TIMETBL_INF
 from django.http import HttpResponse
-import os
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
-import sys
+from collections import defaultdict
 
-def home(requset):
-    return render(requset, 'home.html')
+def home(request):
+    return render(request, 'home.html')
 
-def login(requset):
-    if requset.method == "POST":
-        username = requset.POST['userId']
-        password = requset.POST['userPass']
+def login(request):
+    if request.method == "POST":
+        username = request.POST['userId']
+        password = request.POST['userPass']
 
         user = auth.authenticate(
-            requset, username=username, password=password
+            request, username=username, password=password
         )
         if user is not None:
-            auth.login(requset, user)
+            auth.login(request, user)
             print("login success!")
             return redirect('home')
         else:
             print('login error!')
-            return render(requset, 'login.html',{
+            return render(request, 'login.html',{
                 'error': 'Username or Password is incorrect',
             })
     else:
-        return render(requset, 'login.html')
+        return render(request, 'login.html')
 
-def signup(requset):
-    if requset.method == 'POST':
+def signup(request):
+    if request.method == 'POST':
         user = User.objects.create_user(
-            username=requset.POST['userId'],
-            password=requset.POST['userPass']
+            username=request.POST['userId'],
+            password=request.POST['userPass']
         )
-        auth.login(requset, user)
+        auth.login(request, user)
         print('sigun success!')
         return redirect('home')
     else:
-        return render(requset, 'signup.html')
+        return render(request, 'signup.html')
 
 def logout(request):
         auth.logout(request)
         return redirect('home')
 
-def postlike(request):
-
-        customer = {
-            'id' : 15,
-            'name' : 'Tom',
-        }
-        jsonString = json.dumps(customer)
-
-        print(jsonString)
-
-        return render(request, 'login.html', {'id' : id})
-
-def workinfo(requset):
+def workinfo(request):
 
     year = time.strftime('%Y', time.localtime(time.time()))
     month = time.strftime('%m', time.localtime(time.time()))
     day = time.strftime('%d', time.localtime(time.time()))
-    Date = year + '-' + month + '-'
+    Date = year + month
     DateList = []
     for i in range(1, 31):
-        DateList.append(Date+ str(i))
-    return render(requset, 'workinfo.html', {'Date' : DateList})
+        if i < 10:
+            DateList.append(Date+ '0' + str(i))
+        else:
+            DateList.append(Date + str(i))
+    return render(request, 'workinfo.html', {'Date' : DateList})
 
-def workadd(requset):
-    # if requset.method == "POST":
-        # sTime = requset.POST.get('sTime', '')
-        # eTime = requset.POST.get('eTime', '')
-        # user = requset.POST.get('user', '')
-        # sTimeArray = [];
-        # sTimeArray = requset.getParameterValues("sTime");
-        # param = json.loads(request.json)
-        # sTime = param.get('sTime')
-        # print(sTimeArray)
+def addmenu(request):
 
-        # print(sTime)
+    year = time.strftime('%Y', time.localtime(time.time()))
+    month = time.strftime('%m', time.localtime(time.time()))
+    day = time.strftime('%d', time.localtime(time.time()))
+    Date = year + month
+    DateList = []
+    for i in range(1, 31):
+        if i < 10:
+            DateList.append(Date + '0' + str(i))
+        else:
+            DateList.append(Date + str(i))
 
-        # #csv파일 쓰기
-        # f = open('workinfo/' + date + '_' + user + '.csv', 'w', encoding='utf-8', newline='')
-        # wr = csv.writer(f)
-        # wr.writerow([date, sTime, dTime])
+    return render(request, 'workadd.html', {'Date': DateList})
 
-    # data = sys.stdin.read()
-    # params = json.loads(data)
-    # text = params['sTime']
-    # json = requset.POST.get('jsonData', '')
-    # result = {'sTime' : text}
+def workadd(request):
+
+    datas = json.loads(request.body)
+    date = '20190302'
+    user = 'hoin'
+
+    # f = open('workinfo/' + date + '_' + user + '.csv', 'w', encoding='utf-8')
+    # wr = csv.writer(f)
+    # wr.writerow(datas)
     print("ajax Okay")
-    # print(json.JSONEncoder().encode(result))
 
+    return render(request, 'home.html')
 
-        # f.close()
-        # print(f)
-    return render(requset, 'workinfo.html')
-
-def worksearch(requset):
-    if requset.method == "POST":
-        sYear = requset.POST.get('searchYear')
-        sMonth = requset.POST.get('searchMonth')
-        sName = requset.POST.get('searchName')
+def worksearch(request):
+    if request.method == "POST":
+        sYear = request.POST.get('searchYear')
+        sMonth = request.POST.get('searchMonth')
+        sName = request.POST.get('searchName')
         print(sYear, sMonth)
 
         # csv파일 읽기
@@ -123,19 +107,4 @@ def worksearch(requset):
         f.close()
         print(workList)
 
-    return render(requset, 'workinfo.html', {'workList': workList})
-
-def favorites(request):
-    if request.is_ajax():
-        message = "Yes, AJAX!"
-    else:
-        message = "NOT AJAX"
-    return HttpResponse(message)
-
-def AjaxRespon(request):
-    #return HttpResponse('<div id = "Context">테스트</div>')
-    # key = open(os.path.join(os.path.dirname(__file__), 'data'), mode='r', encoding='utf-8').read()
-    # context = {'key':'<div id = "Context">{}</div>'.format(key)}
-    context = {'key': '<div id = "Context">{}</div>'}
-    print("ajaxRespons")
-    return render(request, 'ajax.html', context)
+    return render(request, 'workinfo.html', {'workList': workList})
